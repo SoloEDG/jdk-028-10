@@ -65,6 +65,14 @@ const spec = computed(() => getSpec(props.node.kind));
       /><text :x="node.x + 87" :y="node.y + 61" class="switch-text">{{
         value
       }}</text></g
+    ><g v-if="node.kind === 'CONST0' || node.kind === 'CONST1'"
+      ><text
+        :x="node.x + 78"
+        :y="node.y + 58"
+        class="const-mark"
+        pointer-events="none"
+        >{{ node.kind === "CONST1" ? "1" : "0" }}</text
+      ></g
     ><g v-if="node.kind === 'OUTPUT'"
       ><circle
         :cx="node.x + 88"

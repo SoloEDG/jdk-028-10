@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type {
   CircuitDocument,
   GateKind,
@@ -7,7 +7,7 @@ import type {
   Point,
 } from "@/shared/types";
 import type { PortRequest } from "@/shared/commands";
-import { BOARD, snapPosition } from "../lib/geometry";
+import { boardBounds, snapPosition } from "../lib/geometry";
 import GateNodeView from "./GateNode.vue";
 import WireLayer from "./WireLayer.vue";
 const props = defineProps<{
@@ -24,6 +24,7 @@ const emit = defineEmits<{
   port: [port: PortRequest];
   toggle: [id: string];
 }>();
+const view = computed(() => boardBounds(props.document.nodes));
 const svg = ref<SVGSVGElement | null>(null);
 let drag: { id: string; offset: Point } | null = null;
 function coordinate(event: PointerEvent): Point {
@@ -62,7 +63,7 @@ function background(event: PointerEvent) {
       ref="svg"
       class="circuit-board"
       :class="{ placing: tool }"
-      :viewBox="`0 0 ${BOARD.width} ${BOARD.height}`"
+      :viewBox="`0 0 ${view.width} ${view.height}`"
       aria-label="电路接线工作台"
       @pointermove="pointerMove"
       @pointerup="drag = null"
@@ -75,8 +76,8 @@ function background(event: PointerEvent) {
         </pattern>
       </defs>
       <rect
-        width="1000"
-        height="520"
+        :width="view.width"
+        :height="view.height"
         fill="url(#grid)"
         @pointerdown="background"
       />

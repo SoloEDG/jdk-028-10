@@ -1,6 +1,6 @@
 import type { CircuitDocument, GateNode, Wire } from "@/shared/types";
-import { getSpec } from "@/features/catalog";
-import { topologicalOrder } from "@/features/circuit";
+import { getSpec } from "@/features/catalog/lib/specs";
+import { topologicalOrder } from "@/features/circuit/lib/graph";
 const object = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
 export function decodeDocument(text: string): CircuitDocument {
@@ -38,10 +38,10 @@ export function decodeDocument(text: string): CircuitDocument {
     const spec = getSpec(value.kind);
     ids.add(value.id);
     if (
-      Number(value.x) < 20 ||
-      Number(value.x) > 880 ||
-      Number(value.y) < 40 ||
-      Number(value.y) > 420
+      Number(value.x) < -40 ||
+      Number(value.x) > 6000 ||
+      Number(value.y) < -40 ||
+      Number(value.y) > 6000
     )
       throw new Error("元件坐标超出工作台范围");
     return {

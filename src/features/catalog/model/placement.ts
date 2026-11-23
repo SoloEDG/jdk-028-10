@@ -15,7 +15,11 @@ export function usePlacement() {
   ): GateNode {
     const peers = document.nodes.filter((node) => node.kind === kind);
     const label =
-      kind === "INPUT"
+      kind === "CONST0" || kind === "CONST1"
+        ? kind === "CONST1"
+          ? "1"
+          : "0"
+        : kind === "INPUT"
         ? (["A", "B", "C", "D"].find(
             (name) => !document.nodes.some((node) => node.label === name),
           ) ?? `I${peers.length + 1}`)

@@ -1,5 +1,5 @@
 import type { CircuitDocument, Endpoint } from "@/shared/types";
-import { getSpec } from "@/features/catalog";
+import { getSpec } from "@/features/catalog/lib/specs";
 import { createId, findNode } from "@/shared/document";
 import { topologicalOrder } from "../lib/graph";
 export function validateConnection(

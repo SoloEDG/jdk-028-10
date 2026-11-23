@@ -4,6 +4,7 @@ import { CatalogPanel } from "@/features/catalog";
 import { CircuitBoard } from "@/features/circuit";
 import { InputRack, SignalMonitor } from "@/features/simulation";
 import { ChallengePanel } from "@/features/challenge";
+import { KmapExperience } from "@/features/kmap";
 import { WorkspaceBar } from "@/features/workspace";
 import { useLab } from "./useLab";
 const lab = useLab();
@@ -13,6 +14,11 @@ const { tool } = lab.placement,
   { signals } = lab.simulation;
 const { target, table, passed, inspected, hint } = lab.challenge;
 const { status } = lab.workspace;
+const { mode } = lab;
+const switchMode = (next: "circuit" | "kmap") => {
+  mode.value = next;
+  lab.circuit.resetSelection();
+};
 const selectedNode = computed(() =>
   document.value.nodes.find((node) => node.id === selected.value),
 );
@@ -37,8 +43,27 @@ onUnmounted(() => window.removeEventListener("keydown", keydown));
           <p>把逻辑，连接起来。</p>
         </div>
       </div>
+      <div class="mode-switch" role="tablist" aria-label="实验模式">
+        <button
+          role="tab"
+          :aria-selected="mode === 'circuit'"
+          :class="{ active: mode === 'circuit' }"
+          @click="switchMode('circuit')"
+        >
+          门电路工作台
+        </button>
+        <button
+          role="tab"
+          :aria-selected="mode === 'kmap'"
+          :class="{ active: mode === 'kmap' }"
+          @click="switchMode('kmap')"
+        >
+          卡诺图实验台
+        </button>
+      </div>
       <div class="instrument-label">
-        <span class="power-light" />组合逻辑模式 <small>BENCH / JDK–028</small>
+        <span class="power-light" />{{ mode === "kmap" ? "卡诺图化简模式" : "组合逻辑模式" }}
+        <small>BENCH / JDK–028</small>
       </div>
     </header>
     <WorkspaceBar
@@ -52,7 +77,13 @@ onUnmounted(() => window.removeEventListener("keydown", keydown));
       @import="lab.workspace.importText"
       @error="lab.notify({ tone: 'error', message: $event })"
     />
-    <main class="workbench">
+    <main v-if="mode === 'kmap'" class="kmap-workbench">
+      <KmapExperience
+        :document="document"
+        @request-document-update="document = $event"
+      />
+    </main>
+    <main v-else class="workbench">
       <CatalogPanel
         :tool="tool"
         @choose="

@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import type { GateKind } from "@/shared/types";
+import { computed } from "vue";
 import { gateSpecs } from "../lib/specs";
 import GateTile from "./GateTile.vue";
 defineProps<{ tool: GateKind | null }>();
+// 常量源只供卡诺图实验生成电路使用，不在手动元件库中出现。
+const placeableSpecs = computed(() =>
+  gateSpecs.filter((spec) => spec.kind !== "CONST0" && spec.kind !== "CONST1"),
+);
 defineEmits<{ choose: [kind: GateKind | null] }>();
 </script>
 <template>
@@ -13,7 +18,7 @@ defineEmits<{ choose: [kind: GateKind | null] }>();
     <p class="panel-help">选择元件，再点击工作台放置。</p>
     <div class="gate-list">
       <GateTile
-        v-for="spec in gateSpecs"
+        v-for="spec in placeableSpecs"
         :key="spec.kind"
         :spec="spec"
         :active="tool === spec.kind"

@@ -64,6 +64,22 @@ export const gateSpecs: readonly GateSpec[] = [
     outputs: 1,
     description: "或门结果取反",
   },
+  {
+    kind: "CONST0",
+    name: "常量 0",
+    symbol: "0",
+    inputs: 0,
+    outputs: 1,
+    description: "恒为 0 的电源；由卡诺图生成电路时使用",
+  },
+  {
+    kind: "CONST1",
+    name: "常量 1",
+    symbol: "1",
+    inputs: 0,
+    outputs: 1,
+    description: "恒为 1 的电源；由卡诺图生成电路时使用",
+  },
 ];
 export function getSpec(kind: string): GateSpec {
   const spec = gateSpecs.find((item) => item.kind === kind);

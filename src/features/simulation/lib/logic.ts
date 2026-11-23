@@ -3,6 +3,8 @@ export function invert(value: Signal): Signal {
   return value === "X" ? "X" : value === 1 ? 0 : 1;
 }
 export function gateValue(kind: GateKind, inputs: Signal[]): Signal {
+  if (kind === "CONST0") return 0;
+  if (kind === "CONST1") return 1;
   if (kind === "NOT") return invert(inputs[0] ?? "X");
   if (kind === "OUTPUT") return inputs[0] ?? "X";
   if (kind === "AND" || kind === "NAND") {

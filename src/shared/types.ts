@@ -1,6 +1,15 @@
 export type Signal = 0 | 1 | "X";
 export type GateKind =
-  "INPUT" | "OUTPUT" | "AND" | "OR" | "XOR" | "NOT" | "NAND" | "NOR";
+  | "INPUT"
+  | "OUTPUT"
+  | "AND"
+  | "OR"
+  | "XOR"
+  | "NOT"
+  | "NAND"
+  | "NOR"
+  | "CONST0"
+  | "CONST1";
 export interface Point {
   x: number;
   y: number;

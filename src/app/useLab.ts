@@ -6,6 +6,7 @@ import { useCircuit } from "@/features/circuit";
 import { useSimulation } from "@/features/simulation";
 import { useChallenge } from "@/features/challenge";
 import { loadInitial, useWorkspace } from "@/features/workspace";
+import { useKmap } from "@/features/kmap";
 export function useLab() {
   const initial = loadInitial(),
     document = ref(initial.document);
@@ -20,9 +21,16 @@ export function useLab() {
   const circuit = useCircuit(document, notify);
   const simulation = useSimulation(document),
     challenge = useChallenge(document);
+  const mode = ref<"circuit" | "kmap">("circuit");
+  const kmap = useKmap(document, (next) => {
+    document.value = next;
+    // 生成电路后切到工作台，让学生直接看到接好的共享网络。
+    mode.value = "circuit";
+  });
   const workspace = useWorkspace(document, notify, () => {
     circuit.resetSelection();
     challenge.reset();
+    kmap.resetAll();
     placement.tool.value = null;
   });
   function place(point: Point) {
@@ -73,6 +81,8 @@ export function useLab() {
     circuit,
     simulation,
     challenge,
+    kmap,
+    mode,
     workspace,
     place,
     move,
